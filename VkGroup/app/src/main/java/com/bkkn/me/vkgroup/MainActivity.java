@@ -1,27 +1,21 @@
 package com.bkkn.me.vkgroup;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.arellomobile.mvp.MvpAppCompatActivity;
-import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.bkkn.me.vkgroup.consts.ApiConstants;
 import com.bkkn.me.vkgroup.mvp.presenter.MainPresenter;
 import com.bkkn.me.vkgroup.mvp.view.MainView;
+import com.bkkn.me.vkgroup.ui.activity.BaseActivity;
+import com.bkkn.me.vkgroup.ui.fragment.NewsFeedFragment;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
-import com.vk.sdk.util.VKUtil;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-
-public class MainActivity extends MvpAppCompatActivity implements MainView {
+public class MainActivity extends BaseActivity implements MainView {
 
     @InjectPresenter
     MainPresenter mPresenter;
@@ -29,9 +23,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+        MyApplication.getApplicationComponent().inject(this);
         mPresenter.checkAuth();
+    }
+
+    @Override
+    protected int getMainContentLayout() {
+        return R.layout.activity_main;
     }
 
     @Override
@@ -42,6 +40,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 // Пользователь успешно авторизовался
                 mPresenter.checkAuth();
             }
+
             @Override
             public void onError(VKError error) {
 // Произошла ошибка авторизации (например, пользователь запретил авторизацию)
@@ -59,5 +58,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     @Override
     public void signedIn() {
         Toast.makeText(this, "Current user id is: " + CurrentUser.getId(), Toast.LENGTH_LONG).show();
+        setContent(new NewsFeedFragment());
     }
 }
