@@ -6,21 +6,20 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.bkkn.me.vkgroup.CurrentUser;
 import com.bkkn.me.vkgroup.MyApplication;
 import com.bkkn.me.vkgroup.R;
 import com.bkkn.me.vkgroup.common.BaseAdapter;
+import com.bkkn.me.vkgroup.common.utils.VkListHelper;
 import com.bkkn.me.vkgroup.model.WallItem;
+import com.bkkn.me.vkgroup.model.view.BaseViewModel;
 import com.bkkn.me.vkgroup.model.view.NewsItemBodyViewModel;
+import com.bkkn.me.vkgroup.model.view.NewsItemFooterViewModel;
+import com.bkkn.me.vkgroup.model.view.NewsItemHeaderViewModel;
 import com.bkkn.me.vkgroup.rest.api.WallApi;
 import com.bkkn.me.vkgroup.rest.model.request.WallGetRequestModel;
-import com.bkkn.me.vkgroup.rest.model.response.BaseItemResponse;
-import com.bkkn.me.vkgroup.rest.model.response.Full;
 import com.bkkn.me.vkgroup.rest.model.response.WallGetResponse;
 
 import java.util.ArrayList;
@@ -62,12 +61,12 @@ public class NewsFeedFragment extends BaseFragment {
             @Override
             public void onResponse(Call<WallGetResponse> call, Response<WallGetResponse> response) {
 
-                List<NewsItemBodyViewModel> list = new ArrayList<>();
-
-                for (WallItem item : response.body().response.getItems()) {
-
+                List<WallItem> wallItems = VkListHelper.getWallList(response.body().response);
+                List<BaseViewModel> list = new ArrayList<>();
+                for (WallItem item : wallItems) {
+                    list.add(new NewsItemHeaderViewModel(item));
                     list.add(new NewsItemBodyViewModel(item));
-
+                    list.add(new NewsItemFooterViewModel(item));
                 }
                 mAdapter.addItems(list);
 

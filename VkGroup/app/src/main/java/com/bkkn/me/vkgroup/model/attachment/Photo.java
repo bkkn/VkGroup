@@ -1,10 +1,14 @@
+package com.bkkn.me.vkgroup.model.attachment;
 
-package com.bkkn.me.vkgroup.model;
+/**
+ * Created by Sergey on 05.09.2017.
+ */
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.vk.sdk.api.model.VKAttachments;
 
-public class Photo {
+public class Photo implements Attachment {
 
     @SerializedName("id")
     @Expose
@@ -49,7 +53,7 @@ public class Photo {
     @Expose
     private String accessKey;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
@@ -161,4 +165,8 @@ public class Photo {
         this.accessKey = accessKey;
     }
 
+    @Override
+    public String getType() {
+        return VKAttachments.TYPE_PHOTO;
+    }
 }
